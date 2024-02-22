@@ -1,8 +1,8 @@
 import { IQuizService } from './interfaces/IQuizService';
-import { Quiz } from './entities/Quiz';
+import { Quiz } from './entities/quiz';
 
 export class QuizService implements IQuizService {
-  createQuiz(quiz: Quiz): Promise<Quiz> {
+  createQuiz(): Promise<Quiz> {
     return Promise.resolve(undefined);
   }
 }

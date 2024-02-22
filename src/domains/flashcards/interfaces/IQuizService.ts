@@ -1,5 +1,5 @@
-import { Quiz } from '../entities/Quiz';
+import { Quiz } from '../entities/quiz';
 
 export interface IQuizService {
-  createQuiz(quiz: Quiz): Promise<Quiz>;
+  createQuiz(): Promise<Quiz>;
 }

@@ -1,10 +1,28 @@
 import { IFlashcardRepository } from './interfaces/IFlashcardRepository';
-import { Flashcard } from '../../domains/flashcards/entities/Flashcard';
+import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
-export class FlashcardRepository implements IFlashcardRepository {
-  async findFlashcardById(id: string): Promise<Flashcard> {
-    throw new Error('Method not implemented.');
+export class FlashcardRepository
+  extends Repository<Flashcard>
+  implements IFlashcardRepository
+{
+  constructor(
+    @InjectRepository(Flashcard)
+    private readonly flashcardRepository: Repository<Flashcard>,
+  ) {
+    super(
+      flashcardRepository.target,
+      flashcardRepository.manager,
+      flashcardRepository.queryRunner,
+    );
   }
 
-  // Other repository methods here
+  findFlashcardById(id: string): Promise<Flashcard> {
+    return this.findOneBy({ id });
+  }
+
+  findAll(): Promise<Flashcard[]> {
+    return this.find();
+  }
 }
