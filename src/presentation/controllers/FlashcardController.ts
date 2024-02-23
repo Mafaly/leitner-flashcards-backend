@@ -1,18 +1,29 @@
-import { Request, Response } from 'express';
-import { IFlashcardService } from '../../domains/flashcards/interfaces/IFlashcardService';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
+import { ApiTags } from '@nestjs/swagger';
+import { FlashcardService } from '../../domains/flashcards/FlashcardService';
 
+@ApiTags('Cards')
+@Controller('cards')
 export class FlashcardController {
-  constructor(private flashcardService: IFlashcardService) {}
+  constructor(private flashcardService: FlashcardService) {}
 
-  async getFlashcards(req: Request, res: Response): Promise<void> {
-    try {
-      const flashcards = await this.flashcardService.getFlashcards();
-      res.json(flashcards);
-    } catch (error) {
-      // Handle error
-      res.status(500).send(error.message);
-    }
+  @Get()
+  async getAllCards(@Query('tags') tags?: string[]): Promise<Flashcard[]> {
+    return this.flashcardService.getAllCards(tags);
   }
 
-  // Other controller methods here
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async createCard(@Body() cardUserData: CardUserData): Promise<Flashcard> {
+    return this.flashcardService.createCard(cardUserData);
+  }
 }

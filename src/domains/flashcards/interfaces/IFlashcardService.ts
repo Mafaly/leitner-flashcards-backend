@@ -1,7 +1,7 @@
 import { Flashcard } from '../entities/flashcard.entities';
 
 export interface IFlashcardService {
-  getFlashcards(): Promise<Flashcard[]>;
+  getAllCards(tags?: string[]): Promise<Flashcard[]>;
 
-  getFlashcardById(flashcardId: string): Promise<Flashcard>;
+  createCard(cardUserData: CardUserData): Promise<Flashcard>;
 }
