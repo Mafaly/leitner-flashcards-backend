@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
 import { QuizzService } from '../../domains/flashcards/QuizzService';
-import { ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Learning')
 @Controller('cards')
@@ -24,6 +24,12 @@ export class QuizzController {
     type: String,
     example: '2024-02-22',
     description: 'Date of quizz. If not provided, date will be today.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'All cards of quizz for today',
+    type: Flashcard,
+    isArray: true,
   })
   async getCardsForQuizz(@Query('date') date?: string): Promise<Flashcard[]> {
     return this.quizzService.getCardsForQuizz(date);
@@ -47,7 +53,18 @@ export class QuizzController {
       example: { isValid: true },
     },
   })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Answer has been taken into account',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Card not found',
+  })
   async answerCard(
     @Param('cardId') cardId: string,
     @Body('isValid') isValid: boolean,
