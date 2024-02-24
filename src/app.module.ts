@@ -6,13 +6,16 @@ import { dbdatasource } from './infrastructure/database/data.source';
 import { FlashcardService } from './domains/flashcards/FlashcardService';
 import { FlashcardRepository } from './infrastructure/repositories/FlashcardRepository';
 import { Flashcard } from './domains/flashcards/entities/flashcard.entities';
+import { ObjectStorageModule } from './infrastructure/object-storage/object-storage.module';
+import { UsersController } from './presentation/controllers/users.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dbdatasource),
     TypeOrmModule.forFeature([Flashcard]),
+    ObjectStorageModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [AppService, FlashcardService, FlashcardRepository],
 })
 export class AppModule {}
