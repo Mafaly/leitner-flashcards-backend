@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
 import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
 import {
   ApiBody,
@@ -67,7 +59,6 @@ export class FlashcardController {
       },
     },
   })
-  //TODO fix response example : add dtos
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Created card',

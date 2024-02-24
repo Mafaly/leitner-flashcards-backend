@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
   Patch,
@@ -11,6 +10,7 @@ import {
 import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
 import { QuizzService } from '../../domains/flashcards/QuizzService';
 import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CardId } from '../../domains/flashcards/dtos/CardIdDto';
 
 @ApiTags('Learning')
 @Controller('cards')
@@ -39,7 +39,7 @@ export class QuizzController {
   @ApiQuery({
     name: 'cardId',
     required: true,
-    type: String,
+    type: CardId,
     example: '6c10ad48-2bb8-4e2e-900a-21d62c00c07b',
     description: 'Id of answered card.',
   })
@@ -66,7 +66,7 @@ export class QuizzController {
     description: 'Card not found',
   })
   async answerCard(
-    @Param('cardId') cardId: string,
+    @Param('cardId') cardId: CardId,
     @Body('isValid') isValid: boolean,
   ): Promise<void> {
     return this.quizzService.answerCard(cardId, isValid);

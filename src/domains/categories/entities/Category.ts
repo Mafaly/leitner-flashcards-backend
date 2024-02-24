@@ -1,11 +1,10 @@
-export class Category {
-  id: string;
-  name: string;
-  description?: string;
-
-  constructor(id: string, name: string, description?: string) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-  }
+export enum Category {
+  FIRST = 'FIRST',
+  SECOND = 'SECOND',
+  THIRD = 'THIRD',
+  FOURTH = 'FOURTH',
+  FIFTH = 'FIFTH',
+  SIXTH = 'SIXTH',
+  SEVENTH = 'SEVENTH',
+  DONE = 'DONE',
 }

@@ -1,6 +1,7 @@
 import { IQuizzService } from './interfaces/IQuizzService';
 import { Flashcard } from './entities/flashcard.entities';
 import { Injectable } from '@nestjs/common';
+import { CardId } from './dtos/CardIdDto';
 
 @Injectable()
 export class QuizzService implements IQuizzService {
@@ -8,7 +9,7 @@ export class QuizzService implements IQuizzService {
     return Promise.resolve([]);
   }
 
-  answerCard(cardId: string, isValid: boolean): Promise<void> {
+  answerCard(cardId: CardId, isValid: boolean): Promise<void> {
     return Promise.resolve(undefined);
   }
 }

@@ -1,10 +1,17 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Category } from '../../categories/entities/category.entities';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from '../../categories/entities/Category';
 
 @Entity()
 export class Flashcard {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({
+    type: 'enum',
+    enum: Category,
+    default: Category.FIRST,
+  })
+  category: Category;
 
   @Column()
   question: string;
@@ -19,14 +26,10 @@ export class Flashcard {
   @Column({ nullable: true })
   lastAnswered: Date;
 
-  // has a category relation
-  @ManyToOne(() => Category, (category) => category.flashcards, { eager: true })
-  category: Category;
-
   toJSON() {
     return {
       id: this.id,
-      category: this.category.name,
+      category: this.category,
       question: this.question,
       answer: this.answer,
       tag: this.tag,
