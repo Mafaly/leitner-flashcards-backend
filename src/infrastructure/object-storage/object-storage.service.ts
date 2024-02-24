@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Client } from 'minio';
 import * as process from 'process';
+import { Readable } from 'stream';
 
 @Injectable()
 export class ObjectStorageService {
@@ -38,5 +39,20 @@ export class ObjectStorageService {
     );
 
     return fileName;
+  }
+
+  async getFile(fileName: string): Promise<Readable> {
+    return new Promise((resolve, reject) => {
+      this.minioClient.getObject(
+        this.bucketName,
+        fileName,
+        (err, dataStream) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(dataStream);
+        },
+      );
+    });
   }
 }

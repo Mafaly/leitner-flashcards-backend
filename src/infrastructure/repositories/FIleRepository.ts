@@ -22,4 +22,18 @@ export class FileRepository extends Repository<FileEntity> {
     newFile.storagePath = storagePath;
     return await this.fileRepository.save(newFile);
   }
+
+  async getLastUploadedFile() {
+    const file = await this.fileRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 1,
+    });
+
+    if (file.length === 0) {
+      return '';
+    }
+    return file[0].storagePath;
+  }
 }
