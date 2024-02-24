@@ -11,9 +11,10 @@ export class ObjectStorageService {
     this.minioClient = new Client({
       endPoint: process.env.OBJECT_STORAGE_ENDPOINT,
       port: Number(process.env.OBJECT_STORAGE_PORT),
-      useSSL: process.env.ENVIROMENT !== 'development',
+      useSSL: false,
       accessKey: process.env.OBJECT_STORAGE_ACCESS_KEY,
       secretKey: process.env.OBJECT_STORAGE_SECRET_KEY,
+      region: process.env.OBJECT_STORAGE_REGION,
     });
     this.bucketName = process.env.OBJECT_STORAGE_BUCKET;
   }
@@ -35,6 +36,7 @@ export class ObjectStorageService {
       file.buffer,
       file.size,
     );
+
     return fileName;
   }
 }
