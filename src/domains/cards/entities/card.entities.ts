@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from '../../categories/entities/Category';
 
 @Entity()
-export class Flashcard {
+export class Card {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

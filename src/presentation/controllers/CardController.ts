@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
-import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
 import {
   ApiBody,
   ApiQuery,
@@ -7,13 +6,14 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { FlashcardService } from '../../domains/flashcards/FlashcardService';
-import { CardUserData } from '../../domains/flashcards/dtos/CardUserDataDto';
+import { CardService } from '../../domains/cards/CardService';
+import { CardUserData } from '../../domains/cards/dtos/CardUserDataDto';
+import { Card } from '../../domains/cards/entities/card.entities';
 
 @ApiTags('Cards')
 @Controller('cards')
-export class FlashcardController {
-  constructor(private flashcardService: FlashcardService) {}
+export class CardController {
+  constructor(private cardService: CardService) {}
 
   @Get()
   @ApiQuery({
@@ -26,11 +26,11 @@ export class FlashcardController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'A list of flashcards has been successfully retrieved.',
+    description: 'Found cards by tag query',
     schema: {
       type: 'array',
       items: {
-        $ref: getSchemaPath(Flashcard),
+        $ref: getSchemaPath(Card),
       },
       example: [
         {
@@ -43,8 +43,8 @@ export class FlashcardController {
       ],
     },
   })
-  async getAllCards(@Query('tags') tags?: string[]): Promise<Flashcard[]> {
-    return this.flashcardService.getAllCards(tags);
+  async getAllCards(@Query('tags') tags?: string[]): Promise<Card[]> {
+    return this.cardService.getAllCards(tags);
   }
 
   @Post()
@@ -74,7 +74,7 @@ export class FlashcardController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad request',
   })
-  async createCard(@Body() cardUserData: CardUserData): Promise<Flashcard> {
-    return this.flashcardService.createCard(cardUserData);
+  async createCard(@Body() cardUserData: CardUserData): Promise<Card> {
+    return this.cardService.createCard(cardUserData);
   }
 }

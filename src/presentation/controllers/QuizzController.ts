@@ -7,10 +7,10 @@ import {
   Patch,
   Query,
 } from '@nestjs/common';
-import { Flashcard } from '../../domains/flashcards/entities/flashcard.entities';
-import { QuizzService } from '../../domains/flashcards/QuizzService';
+import { QuizzService } from '../../domains/cards/QuizzService';
 import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CardId } from '../../domains/flashcards/dtos/CardIdDto';
+import { CardId } from '../../domains/cards/dtos/CardIdDto';
+import { Card } from '../../domains/cards/entities/card.entities';
 
 @ApiTags('Learning')
 @Controller('cards')
@@ -28,10 +28,10 @@ export class QuizzController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'All cards of quizz for today',
-    type: Flashcard,
+    type: Card,
     isArray: true,
   })
-  async getCardsForQuizz(@Query('date') date?: string): Promise<Flashcard[]> {
+  async getCardsForQuizz(@Query('date') date?: string): Promise<Card[]> {
     return this.quizzService.getCardsForQuizz(date);
   }
 

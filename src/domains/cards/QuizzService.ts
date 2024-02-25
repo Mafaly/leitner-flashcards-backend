@@ -1,14 +1,14 @@
 import { IQuizzService } from './interfaces/IQuizzService';
-import { Flashcard } from './entities/flashcard.entities';
 import { Injectable } from '@nestjs/common';
 import { CardId } from './dtos/CardIdDto';
-import { FlashcardRepository } from '../../infrastructure/repositories/FlashcardRepository';
+import { CardRepository } from '../../infrastructure/repositories/CardRepository';
+import { Card } from './entities/card.entities';
 
 @Injectable()
 export class QuizzService implements IQuizzService {
-  constructor(private readonly flashcardRepository: FlashcardRepository) {}
+  constructor(private readonly flashcardRepository: CardRepository) {}
 
-  async getCardsForQuizz(date?: string): Promise<Flashcard[]> {
+  async getCardsForQuizz(date?: string): Promise<Card[]> {
     // TODO récupérer les cartes selon la logique voulue pour le quizz.
     const queryBuilder =
       this.flashcardRepository.createQueryBuilder('flashcard');
@@ -22,7 +22,7 @@ export class QuizzService implements IQuizzService {
   async answerCard(cardId: CardId, isValid: boolean): Promise<void> {
     //TODO handle is isValid or not
     //TODO return 204 and not 200 http code
-    const flashcard = await this.flashcardRepository.findFlashcardById(
+    const flashcard = await this.flashcardRepository.findCardById(
       cardId.cardId,
     );
 
