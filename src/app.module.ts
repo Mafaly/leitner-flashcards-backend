@@ -9,13 +9,29 @@ import { QuizzController } from './presentation/controllers/QuizzController';
 import { QuizzService } from './domains/cards/QuizzService';
 import { CardRepository } from './infrastructure/repositories/CardRepository';
 import { Card } from './domains/cards/entities/card.entities';
+import { ObjectStorageModule } from './infrastructure/object-storage/object-storage.module';
+import { UsersController } from './presentation/controllers/users.controller';
+import { FileRepository } from './infrastructure/repositories/FIleRepository';
+import { FileEntity } from './domains/users/entities/file.entities';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dbdatasource),
-    TypeOrmModule.forFeature([Card]),
+    TypeOrmModule.forFeature([Card, FileEntity]),
+    ObjectStorageModule,
   ],
-  controllers: [AppController, CardController, QuizzController],
-  providers: [AppService, CardService, QuizzService, CardRepository],
+  controllers: [
+    AppController,
+    UsersController,
+    CardController,
+    QuizzController,
+  ],
+  providers: [
+    AppService,
+    CardService,
+    QuizzService,
+    CardRepository,
+    FileRepository,
+  ],
 })
 export class AppModule {}
