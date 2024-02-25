@@ -21,14 +21,14 @@ export class UsersController {
 
   @Post('profile-picture')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadProfilePicture(@UploadedFile() file: Express.Multer.File) {
     const fileName = await this.minioService.uploadFile(file);
     await this.fileRepository.saveFile(file, fileName);
     return fileName;
   }
 
   @Get('profile-picture')
-  async getFile(@Res({ passthrough: true }) res: Response) {
+  async getLatestProfilePicture(@Res({ passthrough: true }) res: Response) {
     const fileName = await this.fileRepository.getLastUploadedFile();
     const file = await this.minioService.getFile(fileName);
     res.set({

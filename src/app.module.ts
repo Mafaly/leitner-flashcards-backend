@@ -3,9 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbdatasource } from './infrastructure/database/data.source';
-import { FlashcardService } from './domains/flashcards/FlashcardService';
-import { FlashcardRepository } from './infrastructure/repositories/FlashcardRepository';
-import { Flashcard } from './domains/flashcards/entities/flashcard.entities';
+import { CardService } from './domains/cards/CardService';
+import { CardController } from './presentation/controllers/CardController';
+import { QuizzController } from './presentation/controllers/QuizzController';
+import { QuizzService } from './domains/cards/QuizzService';
+import { CardRepository } from './infrastructure/repositories/CardRepository';
+import { Card } from './domains/cards/entities/card.entities';
 import { ObjectStorageModule } from './infrastructure/object-storage/object-storage.module';
 import { UsersController } from './presentation/controllers/users.controller';
 import { FileRepository } from './infrastructure/repositories/FIleRepository';
@@ -14,14 +17,20 @@ import { FileEntity } from './domains/users/entities/file.entities';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dbdatasource),
-    TypeOrmModule.forFeature([Flashcard, FileEntity]),
+    TypeOrmModule.forFeature([Card, FileEntity]),
     ObjectStorageModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [
+    AppController,
+    UsersController,
+    CardController,
+    QuizzController,
+  ],
   providers: [
     AppService,
-    FlashcardService,
-    FlashcardRepository,
+    CardService,
+    QuizzService,
+    CardRepository,
     FileRepository,
   ],
 })
