@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   HttpStatus,
-  NotFoundException,
   Param,
   Patch,
 } from '@nestjs/common';
@@ -33,11 +32,7 @@ export class QuizController {
     isArray: true,
   })
   async getCardsForQuizz(): Promise<Card[]> {
-    const cardsForQuiz = this.quizzService.getCardsForQuizz();
-    if (!cardsForQuiz) {
-      throw new NotFoundException('No cards for today');
-    }
-    return cardsForQuiz;
+    return this.quizzService.getCardsForQuizz();
   }
 
   @Patch('/:cardId/answer')

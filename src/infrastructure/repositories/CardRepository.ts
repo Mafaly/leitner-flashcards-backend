@@ -35,6 +35,9 @@ export class CardRepository
     return this.find();
   }
 
+  /**
+   * Find all cards that are ready for review.
+   */
   async findCardsForReview(): Promise<Card[]> {
     const today = startOfDay(new Date());
     const cards = await this.cardRepository.find();
@@ -43,11 +46,12 @@ export class CardRepository
       if (card.category === Category.FIRST || card.lastAnswered === null) {
         return true;
       }
-      const daysToAdd = categoryDaysMap[card.category]; // Assurez-vous que categoryDaysMap est bien défini et importé
+      const daysToAdd = categoryDaysMap[card.category];
       const nextReviewDate = addDays(card.lastAnswered, daysToAdd);
+      const nextReviewDateStart = startOfDay(nextReviewDate);
       return (
-        isAfter(today, nextReviewDate) ||
-        today.getTime() === nextReviewDate.getTime()
+        isAfter(today, nextReviewDateStart) ||
+        today.getTime() === nextReviewDateStart.getTime()
       );
     });
   }

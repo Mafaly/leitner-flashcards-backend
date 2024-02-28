@@ -21,16 +21,20 @@ export class QuizService implements IQuizzService {
   async answerCard(cardId: string, isValid: boolean): Promise<void> {
     if (cardId == '') throw new BadRequestException('Card id is required');
     const card = await this.cardRepository.findCardById(cardId);
-    if (card == null) {
-      throw new NotFoundException('Card not found');
-    }
+    await this.verifyCanAnserCard(card);
     if (!isValid) {
       card.category = Category.FIRST;
     } else {
-      card.lastAnswered = new Date();
       this.moveCardToNextCategory(card);
     }
 
+    const activeQuizSession = await this.quizRepository.findActiveQuiz();
+    const currentCardInActiveQuiz = activeQuizSession.quizCards.find(
+      (quizCard) => quizCard.card.id == card.id,
+    );
+    currentCardInActiveQuiz.answered = true;
+    card.lastAnswered = new Date();
+    await this.quizCardRepository.save(currentCardInActiveQuiz);
     await this.cardRepository.save(card);
 
     return;
@@ -43,9 +47,10 @@ export class QuizService implements IQuizzService {
     }
     const cards = await this.cardRepository.findCardsForReview();
     if (cards.length <= 0) {
-      return null;
+      throw new NotFoundException('No cards for today');
     }
     await this.createQuiz(cards);
+
     return cards;
   }
 
@@ -87,5 +92,41 @@ export class QuizService implements IQuizzService {
       quizCard.quiz = quiz;
       this.quizCardRepository.save(quizCard);
     });
+  }
+
+  /**
+   * Verify if card can be answered.
+   *
+   * Is it in an active quiz, is it already answered, is it already done.
+   * @param card Card to be verified
+   * @private
+   *
+   * @throws if a condition is not met
+   */
+  private async verifyCanAnserCard(card: Card): Promise<void> {
+    if (card == null) {
+      throw new NotFoundException('Card not found');
+    }
+    if (card.category == Category.DONE) {
+      throw new BadRequestException('Card is already done');
+    }
+
+    const activeQuizSession = await this.quizRepository.findActiveQuiz();
+    if (activeQuizSession == null) {
+      throw new BadRequestException('No active quiz');
+    }
+    const currentCardInActiveQuiz = activeQuizSession.quizCards.find(
+      (quizCard) => quizCard.card.id == card.id,
+    );
+    console.log(activeQuizSession.quizCards);
+    console.log(card);
+    if (!currentCardInActiveQuiz) {
+      throw new BadRequestException('Card is not in active quiz');
+    }
+    if (currentCardInActiveQuiz.answered) {
+      throw new BadRequestException('Card is already answered');
+    }
+
+    return;
   }
 }
