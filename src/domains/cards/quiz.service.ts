@@ -118,8 +118,6 @@ export class QuizService implements IQuizzService {
     const currentCardInActiveQuiz = activeQuizSession.quizCards.find(
       (quizCard) => quizCard.card.id == card.id,
     );
-    console.log(activeQuizSession.quizCards);
-    console.log(card);
     if (!currentCardInActiveQuiz) {
       throw new BadRequestException('Card is not in active quiz');
     }
