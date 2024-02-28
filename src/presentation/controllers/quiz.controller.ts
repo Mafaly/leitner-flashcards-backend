@@ -7,8 +7,13 @@ import {
   Param,
   Patch,
 } from '@nestjs/common';
-import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CardId } from '../../domains/cards/dtos/CardIdDto';
+import {
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Card } from '../../domains/cards/entities/card.entities';
 import { QuizService } from '../../domains/cards/quiz.service';
 
@@ -36,12 +41,12 @@ export class QuizController {
   }
 
   @Patch('/:cardId/answer')
-  @ApiQuery({
+  @ApiParam({
     name: 'cardId',
     required: true,
-    type: CardId,
+    type: String,
     example: '6c10ad48-2bb8-4e2e-900a-21d62c00c07b',
-    description: 'Id of answered card.',
+    description: 'Id of answered card of type CardID',
   })
   @ApiBody({
     schema: {
