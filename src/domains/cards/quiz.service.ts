@@ -7,10 +7,16 @@ import { IQuizzService } from './interfaces/IQuizzService';
 import { Card } from './entities/card.entities';
 import { CardRepository } from '../../infrastructure/repositories/CardRepository';
 import { Category } from '../categories/entities/Category';
+import { QuizRepository } from '../../infrastructure/repositories/QuizRepository';
+import { QuizCardRepository } from '../../infrastructure/repositories/QuizCardRepository';
 
 @Injectable()
 export class QuizService implements IQuizzService {
-  constructor(private cardRepository: CardRepository) {}
+  constructor(
+    private cardRepository: CardRepository,
+    private quizRepository: QuizRepository,
+    private quizCardRepository: QuizCardRepository,
+  ) {}
 
   async answerCard(cardId: string, isValid: boolean): Promise<void> {
     if (cardId == '') throw new BadRequestException('Card id is required');
@@ -21,6 +27,7 @@ export class QuizService implements IQuizzService {
     if (!isValid) {
       card.category = Category.FIRST;
     } else {
+      card.lastAnswered = new Date();
       this.moveCardToNextCategory(card);
     }
 
@@ -29,11 +36,20 @@ export class QuizService implements IQuizzService {
     return;
   }
 
-  getCardsForQuizz(): Promise<Card[]> {
-    return Promise.resolve([]);
+  async getCardsForQuizz(): Promise<Card[]> {
+    const quizCards = await this.quizRepository.findTodaysQuiz();
+    if (quizCards && quizCards.length > 0) {
+      return quizCards;
+    }
+    const cards = await this.cardRepository.findCardsForReview();
+    if (cards.length <= 0) {
+      return null;
+    }
+    await this.createQuiz(cards);
+    return cards;
   }
 
-  moveCardToNextCategory(card: Card) {
+  private moveCardToNextCategory(card: Card) {
     switch (card.category) {
       case Category.FIRST:
         card.category = Category.SECOND;
@@ -60,5 +76,16 @@ export class QuizService implements IQuizzService {
       default:
         throw new BadRequestException('Card is already done');
     }
+  }
+
+  private async createQuiz(cards: Card[]): Promise<void> {
+    const quiz = this.quizRepository.create();
+    await this.quizRepository.save(quiz);
+    cards.forEach((card) => {
+      const quizCard = this.quizCardRepository.create();
+      quizCard.card = card;
+      quizCard.quiz = quiz;
+      this.quizCardRepository.save(quizCard);
+    });
   }
 }

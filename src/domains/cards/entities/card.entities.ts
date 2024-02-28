@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from '../../categories/entities/Category';
+import { QuizCard } from './quizcard.entities';
 
 @Entity()
 export class Card {
@@ -23,8 +24,11 @@ export class Card {
   tag: string;
 
   // lastAnswered: Date nullable
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'timestamp with time zone' })
   lastAnswered: Date;
+
+  @OneToMany(() => QuizCard, (quizCard) => quizCard.card)
+  quizCards: QuizCard[];
 
   toJSON() {
     return {
