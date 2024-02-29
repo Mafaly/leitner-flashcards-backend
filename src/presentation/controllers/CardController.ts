@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiQuery,
@@ -9,6 +17,7 @@ import {
 import { CardService } from '../../domains/cards/CardService';
 import { CardUserData } from '../../domains/cards/dtos/CardUserDataDto';
 import { Card } from '../../domains/cards/entities/card.entities';
+import { validateStringArray } from './utils/validator';
 
 @ApiTags('Cards')
 @Controller('cards')
@@ -44,6 +53,9 @@ export class CardController {
     },
   })
   async getAllCards(@Query('tags') tags?: string[]): Promise<Card[]> {
+    if (!validateStringArray(tags)) {
+      throw new BadRequestException('Tags must be an array of strings');
+    }
     return this.cardService.getAllCards(tags);
   }
 
