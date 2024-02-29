@@ -1,21 +1,26 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   HttpStatus,
   Param,
   Patch,
-  Query,
 } from '@nestjs/common';
-import { QuizzService } from '../../domains/cards/QuizzService';
-import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CardId } from '../../domains/cards/dtos/CardIdDto';
+import {
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Card } from '../../domains/cards/entities/card.entities';
+import { QuizService } from '../../domains/cards/quiz.service';
 
 @ApiTags('Learning')
 @Controller('cards')
-export class QuizzController {
-  constructor(private readonly quizzService: QuizzService) {}
+export class QuizController {
+  constructor(private readonly quizzService: QuizService) {}
 
   @Get('/quizz')
   @ApiQuery({
@@ -31,17 +36,17 @@ export class QuizzController {
     type: Card,
     isArray: true,
   })
-  async getCardsForQuizz(@Query('date') date?: string): Promise<Card[]> {
-    return this.quizzService.getCardsForQuizz(date);
+  async getCardsForQuizz(): Promise<Card[]> {
+    return this.quizzService.getCardsForQuizz();
   }
 
   @Patch('/:cardId/answer')
-  @ApiQuery({
+  @ApiParam({
     name: 'cardId',
     required: true,
-    type: CardId,
+    type: String,
     example: '6c10ad48-2bb8-4e2e-900a-21d62c00c07b',
-    description: 'Id of answered card.',
+    description: 'Id of answered card of type CardID',
   })
   @ApiBody({
     schema: {
@@ -66,9 +71,13 @@ export class QuizzController {
     description: 'Card not found',
   })
   async answerCard(
-    @Param('cardId') cardId: CardId,
+    @Param('cardId') cardId: string,
     @Body('isValid') isValid: boolean,
   ): Promise<void> {
+    if (isValid === undefined || typeof isValid !== 'boolean')
+      throw new BadRequestException(
+        'isValid is required and must be a boolean.',
+      );
     return this.quizzService.answerCard(cardId, isValid);
   }
 }
