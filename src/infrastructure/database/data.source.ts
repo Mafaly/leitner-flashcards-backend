@@ -15,11 +15,14 @@ export const dbdatasource: DataSourceOptions = {
   entities: ['dist/**/*.entities.{js,ts}'],
   migrations: ['dist/**/*migration.{js,ts}'],
   ssl: process.env.ENVIRONMENT === 'production',
-  extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
+  extra:
+    process.env.ENVIRONMENT === 'production'
+      ? {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        }
+      : undefined,
 };
 
 const dataSource = new DataSource(dbdatasource);
