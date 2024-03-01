@@ -53,8 +53,11 @@ export class CardController {
     },
   })
   async getAllCards(@Query('tags') tags?: string[]): Promise<Card[]> {
-    if (tags !== undefined && !validateStringArray(tags)) {
-      throw new BadRequestException('Tags must be an array of strings');
+    if (!validateStringArray(tags)) {
+      if (typeof tags !== 'string') {
+        throw new BadRequestException('Tags must be an array of strings');
+      }
+      tags = [tags];
     }
     return this.cardService.getAllCards(tags);
   }

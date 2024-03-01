@@ -12,7 +12,11 @@ export class CardService implements ICardService {
     const flashcards = await this.flashcardRepository.findAll();
     if (tags && tags.length > 0) {
       return flashcards.filter((flashcard) =>
-        tags.some((tag) => flashcard.tag && flashcard.tag.includes(tag)),
+        tags.some(
+          (tag) =>
+            flashcard.tag &&
+            flashcard.tag.toLowerCase().includes(tag.toLowerCase()),
+        ),
       );
     }
     return flashcards;
