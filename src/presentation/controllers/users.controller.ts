@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  NotFoundException,
   Post,
   Res,
   StreamableFile,
@@ -30,6 +31,9 @@ export class UsersController {
   @Get('profile-picture')
   async getLatestProfilePicture(@Res({ passthrough: true }) res: Response) {
     const fileName = await this.fileRepository.getLastUploadedFile();
+    if (!fileName) {
+      throw new NotFoundException('No profile picture found');
+    }
     const file = await this.minioService.getFile(fileName);
     res.set({
       'Content-Type': 'image/jpeg',
