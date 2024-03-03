@@ -17,11 +17,12 @@ $ npm run build
 ```
 
 ### Setup services
+
 First, make your `.env` file : copy the `.env.example` file and rename it `.env`
 
 ```bash
-# up your services
-$ docker-compose up
+# If developping locally, start the services
+$ docker-compose up -d
 ```
 
 ```bash
@@ -29,15 +30,25 @@ $ docker-compose up
 $ npm run migrate:up
 ```
 
+### For MINIO
+
+If you are using MinIO, you will need to create a bucket called `leitner` and a bucket called `leitner-compressed` in
+the MinIO web interface, accessible at `localhost:{OBJECT_STORAGE_PORT}` -> example `localhost:9000`, the port is
+specified in the `.env` file.
+
 ## Running the app
 
 ```bash
 # development
 $ npm run start
+```
 
+```bash
 # watch mode
 $ npm run start:dev
+```
 
+```bash
 # production mode
 $ npm run start:prod
 ```
