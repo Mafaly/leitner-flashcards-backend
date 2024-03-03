@@ -25,7 +25,7 @@ export class UsersController {
   async uploadProfilePicture(@UploadedFile() file: Express.Multer.File) {
     const fileName = await this.minioService.uploadFile(file);
     await this.fileRepository.saveFile(file, fileName);
-    return fileName;
+    return;
   }
 
   @Get('profile-picture')
