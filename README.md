@@ -11,6 +11,9 @@ The backend works with 2 services: a Postgres Database and a MinIO Object Storag
 ```bash
 # dependencies
 $ npm install
+
+# build the project
+$ npm run build
 ```
 
 ### Setup services

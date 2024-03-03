@@ -23,6 +23,18 @@ export class Migration1708812601222 implements MigrationInterface {
       `INSERT INTO card (category, question, answer, tag, "lastAnswered")
        VALUES ('FIRST', 'What is the capital of France?', 'Paris', 'geography', '2021-01-01');`,
     );
+    await queryRunner.query(
+      `INSERT INTO card (category, question, answer, tag, "lastAnswered")
+       VALUES ('FIRST', 'Who was the first President of the United States?', 'George Washington', 'history', '2021-01-01');`,
+    );
+    await queryRunner.query(
+      `INSERT INTO card (category, question, answer, tag, "lastAnswered")
+       VALUES ('FIRST', 'What is the currency of France?', 'Euro', 'economy', '2021-01-01');`,
+    );
+    await queryRunner.query(
+      `INSERT INTO card (category, question, answer, tag, "lastAnswered")
+       VALUES ('FIRST', 'What is the capital of Spain?', 'Madrid', 'geography', '2021-01-01');`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
