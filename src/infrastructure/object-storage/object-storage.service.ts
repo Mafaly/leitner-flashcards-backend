@@ -7,6 +7,7 @@ import { Readable } from 'stream';
 export class ObjectStorageService {
   private minioClient: Client;
   private readonly bucketName: string;
+  private readonly compressedBucketName: string;
 
   constructor() {
     this.minioClient = new Client({
@@ -18,6 +19,7 @@ export class ObjectStorageService {
       region: process.env.OBJECT_STORAGE_REGION,
     });
     this.bucketName = process.env.OBJECT_STORAGE_BUCKET;
+    this.compressedBucketName = process.env.OBJECT_STORAGE_BUCKET_COMPRESSED;
   }
 
   async uploadFile(file: Express.Multer.File) {
@@ -44,7 +46,7 @@ export class ObjectStorageService {
   async getFile(fileName: string): Promise<Readable> {
     return new Promise((resolve, reject) => {
       this.minioClient.getObject(
-        this.bucketName,
+        this.compressedBucketName,
         fileName,
         (err, dataStream) => {
           if (err) {
